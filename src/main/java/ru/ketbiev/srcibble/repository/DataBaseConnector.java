@@ -15,30 +15,42 @@ public class DataBaseConnector {
     @Value("${passwordDB}")
     private String passwordDB;
 
-    public void doGet() {
+    public DataBaseConnector(@Value("${urlDB}") String urlDB,
+                             @Value("${userDB}") String userDB,
+                             @Value("${passwordDB}") String passwordDB) {
         try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+            Class.forName ("org.postgresql.Driver");
+            Connection con = DriverManager.getConnection(urlDB, userDB, passwordDB);
+            DatabaseMetaData dma = con.getMetaData ();
 
-        try {
-            Connection con = DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/scribble",
-                    "postgres",
-                    "root");
+            // Печать сообщения об успешном соединении
+            System.out.println ("\n*** SQLConnection completed ***");
+            System.out.println("Connected to - " + dma.getURL());
+            System.out.println("Driver       - " + dma.getDriverName());
+            System.out.println("Version      - " + dma.getDriverVersion());
+            System.out.println("\n");
 
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT login from users");
+            // Закрыть соединение
+            con.close();
 
-            while (rs.next()) {
-                System.out.println(rs.getString("login"));
-            }
-
-            stmt.close();
+            this.urlDB = urlDB;
+            this.userDB = userDB;
+            this.passwordDB = passwordDB;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println ("\n*** SQLException caught ***\n");
+            while (e != null) {
+                System.out.println ("SQLState: " + e.getSQLState ());
+                System.out.println ("Message: " + e.getMessage ());
+                System.out.println ("Vendor: " + e.getErrorCode ());
+                e = e.getNextException ();
+            }
+        } catch (java.lang.Exception ex) {
+            ex.printStackTrace ();
         }
+    }
+
+    public void doGet() {
+
     }
 
 }
