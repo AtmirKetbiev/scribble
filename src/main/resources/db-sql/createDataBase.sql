@@ -8,7 +8,7 @@ CREATE TABLE users (
   	login           	VARCHAR(20)         NOT NULL,
   	password        	VARCHAR(30)         NOT NULL,
   	username            VARCHAR(15)         NOT NULL,
-  	create_accaunt  	TIMESTAMP           NOT NULL,
+  	create_account  	TIMESTAMP           NOT NULL,
   	signature       	VARCHAR(50),
   	last_login 			TIMESTAMP
 );
