@@ -21,12 +21,12 @@ public class UserRepository {
         this.passwordDB = passwordDB;
     }
 
-    public void create(User user) {
+    public int create(User user) throws Exception {
         try {
             Connection con = DriverManager.getConnection(urlDB, userDB, passwordDB);
             Statement st = con.createStatement();
-            st.execute(String.format("INSERT INTO " +
-                            "users (create_account, last_login, login, password, signature, username) " +
+            int i = st.executeUpdate(String.format("INSERT INTO users " +
+                            "(create_account, last_login, login, password, signature, username) " +
                             "VALUES ('%s' ,'%s' ,'%s' ,'%s' ,'%s' ,'%s');",
                     user.getCreateAccount(),
                     user.getLastLogin(),
@@ -35,32 +35,57 @@ public class UserRepository {
                     user.getSignature(),
                     user.getUsername()));
             con.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public User get(int id) throws Exception {
-        try {
-            Connection con = DriverManager.getConnection(urlDB, userDB, passwordDB);
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery(String.format("SELECT %s from users", id));
-            User user = new User();
-            user.setId(rs.getInt("id"));
-            user.setLogin(rs.getString("login"));
-            con.close();
-            return user;
+            return i;
         } catch (SQLException e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    public void update() {
-
+    public int get(int id) throws Exception {
+        try {
+            Connection con = DriverManager.getConnection(urlDB, userDB, passwordDB);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(String.format("SELECT * FROM users WHERE id = %s", id));
+            rs.next();
+            con.close();
+            return rs.getInt("id");
+        } catch (SQLException e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
-    public void delete() {
+    public int update(int id, User user) throws Exception {
+        try {
+            Connection con = DriverManager.getConnection(urlDB, userDB, passwordDB);
+            Statement st = con.createStatement();
+            int i = st.executeUpdate(String.format("UPDATE users " +
+                            "SET (create_account, last_login, login, password, signature, username) = " +
+                            "('%s' ,'%s' ,'%s' ,'%s' ,'%s' ,'%s') " +
+                            "WHERE id = %s;",
+                    user.getCreateAccount(),
+                    user.getLastLogin(),
+                    user.getLogin(),
+                    user.getPassword(),
+                    user.getSignature(),
+                    user.getUsername(),
+                    id));
+            con.close();
+            return i;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
 
+    public int delete(int id) throws Exception {
+        try {
+            Connection con = DriverManager.getConnection(urlDB, userDB, passwordDB);
+            Statement st = con.createStatement();
+            int i = st.executeUpdate(String.format("DELETE FROM users WHERE id = %s;", id));
+            con.close();
+            return i;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
 }
