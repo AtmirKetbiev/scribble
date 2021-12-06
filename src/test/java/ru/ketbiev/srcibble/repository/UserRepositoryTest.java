@@ -17,7 +17,6 @@ class UserRepositoryTest {
                 "2021-12-10 12:00:00",
                 "testUser",
                 "12345abc",
-                "hi, its me!",
                 "Test Test");
         Assertions.assertEquals(userRepository.create(user), 1);
     }
@@ -42,7 +41,6 @@ class UserRepositoryTest {
                 "2021-12-10 12:00:00",
                 "testUser update",
                 "12345abc",
-                "hi, its me!",
                 "Test Test");
         Assertions.assertEquals(userRepository.update(4, user), 1);
     }
