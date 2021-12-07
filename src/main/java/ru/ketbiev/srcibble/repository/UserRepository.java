@@ -1,12 +1,12 @@
 package ru.ketbiev.srcibble.repository;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.ketbiev.srcibble.model.User;
 
 import java.sql.*;
 
-@Component
+@Repository
 public class UserRepository {
 
     private final String urlDB;
