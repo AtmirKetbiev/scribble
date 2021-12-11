@@ -2,7 +2,7 @@ package ru.ketbiev.srcibble.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.ketbiev.srcibble.model.User;
+import ru.ketbiev.srcibble.dto.UserDTO;
 import ru.ketbiev.srcibble.repository.UserRepository;
 
 @Service
@@ -11,7 +11,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public int create(User user) throws Exception {
+    public int create(UserDTO user) throws Exception {
         return userRepository.create(user);
     }
 
@@ -19,7 +19,7 @@ public class UserService {
         return userRepository.get(id);
     }
 
-    public int update(User user) throws Exception {
+    public int update(UserDTO user) throws Exception {
         return userRepository.update(user.getId(),user);
     }
 

@@ -2,7 +2,7 @@ package ru.ketbiev.srcibble.repository;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-import ru.ketbiev.srcibble.model.User;
+import ru.ketbiev.srcibble.dto.UserDTO;
 
 import java.sql.*;
 
@@ -21,7 +21,7 @@ public class UserRepository {
         this.passwordDB = passwordDB;
     }
 
-    public int create(User user) throws Exception {
+    public int create(UserDTO user) throws Exception {
         try {
             Connection con = DriverManager.getConnection(urlDB, userDB, passwordDB);
             Statement st = con.createStatement();
@@ -54,7 +54,7 @@ public class UserRepository {
         }
     }
 
-    public int update(int id, User user) throws Exception {
+    public int update(int id, UserDTO user) throws Exception {
         try {
             Connection con = DriverManager.getConnection(urlDB, userDB, passwordDB);
             Statement st = con.createStatement();
