@@ -3,12 +3,8 @@ package ru.ketbiev.srcibble.repository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import ru.ketbiev.srcibble.dto.SettingDTO;
-import ru.ketbiev.srcibble.dto.UserDTO;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 @Repository
 public class SettingRepository {
@@ -37,6 +33,53 @@ public class SettingRepository {
             con.close();
             return i;
         } catch (SQLException e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    public SettingDTO get(int id) throws Exception {
+        try {
+            Connection con = DriverManager.getConnection(urlDB, userDB, passwordDB);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(String.format("SELECT * FROM settings WHERE id = %s", id));
+            con.close();
+            rs.next();
+            return new SettingDTO(rs.getInt("id"),
+                    rs.getInt("user_id"),
+                    rs.getString("color"),
+                    rs.getBoolean("is_mkd"));
+        } catch (SQLException e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    public boolean update(SettingDTO setting) throws Exception {
+        try {
+            Connection con = DriverManager.getConnection(urlDB, userDB, passwordDB);
+            Statement st = con.createStatement();
+            int i = st.executeUpdate(String.format("UPDATE settings " +
+                            "SET (user_id, color, is_mkd) " +
+                            "VALUES ('%s' ,'%s' ,'%s') " +
+                            "WHERE id = %s;",
+                    setting.getUserId(),
+                    setting.getTheme(),
+                    setting.getIsMkd(),
+                    setting.getId()));
+            con.close();
+            return i == 1;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    public boolean delete(int id) throws Exception {
+        try {
+            Connection con = DriverManager.getConnection(urlDB, userDB, passwordDB);
+            Statement st = con.createStatement();
+            int i = st.executeUpdate(String.format("DELETE FROM settings WHERE id = %s;", id));
+            con.close();
+            return i == 1;
+        } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }

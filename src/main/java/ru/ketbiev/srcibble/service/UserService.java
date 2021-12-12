@@ -11,19 +11,19 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public int create(UserDTO user) throws Exception {
+    public UserDTO create(UserDTO user) throws Exception {
         return userRepository.create(user);
     }
 
-    public int get(int id) throws Exception {
+    public UserDTO get(int id) throws Exception {
         return userRepository.get(id);
     }
 
-    public int update(UserDTO user) throws Exception {
-        return userRepository.update(user.getId(),user);
+    public boolean update(UserDTO user) throws Exception {
+        return userRepository.update(user);
     }
 
-    public int delete(int id) throws Exception {
+    public boolean delete(int id) throws Exception {
         return userRepository.delete(id);
     }
 }

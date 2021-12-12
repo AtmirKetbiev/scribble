@@ -21,68 +21,80 @@ public class UserRepository {
         this.passwordDB = passwordDB;
     }
 
-    public int create(UserDTO user) throws Exception {
+    public UserDTO create(UserDTO user) throws Exception {
         try {
             Connection con = DriverManager.getConnection(urlDB, userDB, passwordDB);
             Statement st = con.createStatement();
-            int i = st.executeUpdate(String.format("INSERT INTO users " +
-                            "(create_account, last_login, login, password, signature, username) " +
-                            "VALUES ('%s' ,'%s' ,'%s' ,'%s' ,'%s' ,'%s');",
-                    user.getCreateAccount(),
-                    user.getLastLogin(),
+            ResultSet rs = st.executeQuery(String.format("with idNote as (" +
+                            "INSERT INTO users " +
+                            "(login, password, username, signature, create_account, last_login) " +
+                            "VALUES ('%s' ,'%s' ,'%s' ,'%s' ,'%s' ,'%s') " +
+                            "RETURNING id" +
+                            ") " +
+                            "SELECT * FROM idNote",
                     user.getLogin(),
                     user.getPassword(),
+                    user.getUsername(),
                     user.getSignature(),
-                    user.getUsername()));
+                    user.getCreateAccount(),
+                    user.getLastLogin()));
             con.close();
-            return i;
+            rs.next();
+            user.setId(rs.getInt("id"));
+            return user;
         } catch (SQLException e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    public int get(int id) throws Exception {
+    public UserDTO get(int id) throws Exception {
         try {
             Connection con = DriverManager.getConnection(urlDB, userDB, passwordDB);
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(String.format("SELECT * FROM users WHERE id = %s", id));
-            rs.next();
             con.close();
-            return rs.getInt("id");
+            rs.next();
+            return new UserDTO(rs.getInt("id"),
+                    rs.getString("login"),
+                    rs.getString("password"),
+                    rs.getString("username"),
+                    rs.getString("signature"),
+                    rs.getString("create_account"),
+                    rs.getString("last_login"));
         } catch (SQLException e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    public int update(int id, UserDTO user) throws Exception {
+    public boolean update(UserDTO user) throws Exception {
         try {
             Connection con = DriverManager.getConnection(urlDB, userDB, passwordDB);
             Statement st = con.createStatement();
             int i = st.executeUpdate(String.format("UPDATE users " +
-                            "SET (create_account, last_login, login, password, signature, username) = " +
-                            "('%s' ,'%s' ,'%s' ,'%s' ,'%s' ,'%s') " +
+                            "SET (login, password, username, signature, create_account, last_login) " +
+                            "= ('%s' ,'%s' ,'%s' ,'%s' ,'%s' ,'%s') " +
                             "WHERE id = %s;",
-                    user.getCreateAccount(),
-                    user.getLastLogin(),
                     user.getLogin(),
                     user.getPassword(),
-                    user.getSignature(),
                     user.getUsername(),
-                    id));
+                    user.getSignature(),
+                    user.getCreateAccount(),
+                    user.getLastLogin(),
+                    user.getId()));
             con.close();
-            return i;
+            return i == 1;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
-    public int delete(int id) throws Exception {
+    public boolean delete(int id) throws Exception {
         try {
             Connection con = DriverManager.getConnection(urlDB, userDB, passwordDB);
             Statement st = con.createStatement();
             int i = st.executeUpdate(String.format("DELETE FROM users WHERE id = %s;", id));
             con.close();
-            return i;
+            return i == 1;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

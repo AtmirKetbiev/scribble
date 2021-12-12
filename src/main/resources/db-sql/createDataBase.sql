@@ -15,22 +15,14 @@ CREATE TABLE users (
 
 ------------------------------------------------------------------------------------------------------------------------
 
--- Настройки тем--
-CREATE TABLE theme_modes (
-  	id              	INT GENERATED       BY DEFAULT AS IDENTITY NOT NULL PRIMARY KEY,
-  	color               VARCHAR(10)
-);
-
 -- Настройки пользователя --
 CREATE TABLE settings (
   	id              	INT GENERATED       BY DEFAULT AS IDENTITY NOT NULL PRIMARY KEY,
   	user_id             INT                 NOT NULL,
-  	theme_mode_id	    INT                 NOT NULL,
+  	color               VARCHAR(10)         NOT NULL,
   	is_mkd     	        BOOLEAN,
   	FOREIGN KEY (user_id)
-  	    REFERENCES users (id),
-	FOREIGN KEY (theme_mode_id)
-	    REFERENCES theme_modes (id)
+  	    REFERENCES users (id)
 );
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -38,9 +30,9 @@ CREATE TABLE settings (
 -- Заметки --
 CREATE TABLE notes (
   	id              	INT GENERATED       BY DEFAULT AS IDENTITY NOT NULL PRIMARY KEY,
-  	notesname        	VARCHAR(30)         NOT NULL,
+  	name        	    VARCHAR(50)         NOT NULL,
   	text     	        VARCHAR(300),
-  	create_date_time	VARCHAR(3000)
+  	create_note	        TIMESTAMP
 );
 
 -- Пользователи_заметки --

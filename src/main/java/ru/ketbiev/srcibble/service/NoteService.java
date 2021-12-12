@@ -10,7 +10,7 @@ public class NoteService {
     @Autowired
     private NoteRepository noteRepository;
 
-    public int create(UserDTO userDTO, NoteDTO noteDTO) throws Exception {
-        return noteRepository.create(userDTO, noteDTO);
+    public int create(int userId, NoteDTO noteDTO) throws Exception {
+        return noteRepository.create(userId, noteDTO);
     }
 }

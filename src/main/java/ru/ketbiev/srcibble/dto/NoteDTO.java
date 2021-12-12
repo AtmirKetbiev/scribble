@@ -1,10 +1,10 @@
 package ru.ketbiev.srcibble.dto;
 
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class NoteDTO {
     private int id;
